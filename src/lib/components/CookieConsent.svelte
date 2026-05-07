@@ -160,6 +160,7 @@
 			<Dialog.Title>Cookie 偏好设置</Dialog.Title>
 			<Dialog.Description>
 				选择您希望启用的 Cookie 类型。必要 Cookie 无法禁用，因为它们对网站的正常运行至关重要。
+				查看我们的 <a href="/posts/privacy-policy/" class="text-primary underline">隐私政策</a> 了解更多信息。
 			</Dialog.Description>
 		</Dialog.Header>
 		

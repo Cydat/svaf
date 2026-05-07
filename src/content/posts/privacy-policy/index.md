@@ -23,6 +23,6 @@ lang: ""
 - [Microsoft Clarity](https://clarity.microsoft.com)：收集站点访问情况
 
 ### Targeting and advertising cookies（定位和廣告cookies）
-- [Google Adsense](https://adsense.google.com/)：提供广告服务
+- 无
 
-*latest update: 2026/02/04*
+*latest update: 2026/05/07*
