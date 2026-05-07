@@ -194,6 +194,7 @@
 			<Button variant="outline" class="flex items-center gap-2">
 				<Icon icon="mdi:palette" class="w-5 h-5" />
 				AI 生图
+				<Icon icon="mdi:open-in-new" class="w-3.5 h-3.5 opacity-60" />
 			</Button>
 		</a>
 
@@ -271,6 +272,7 @@
 			<Button variant="outline" class="flex items-center gap-2">
 				<Icon icon="mdi:chart-line" class="w-5 h-5" />
 				统计
+				<Icon icon="mdi:open-in-new" class="w-3.5 h-3.5 opacity-60" />
 			</Button>
 		</a>
 		
