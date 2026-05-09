@@ -12,6 +12,7 @@
 	import TimetableCard from '$lib/components/TimetableCard.svelte';
 	import SponsorBanners from '$lib/components/SponsorBanners.svelte';
 	import Announcement from '$lib/components/Announcement.svelte';
+	import { Card, CardHeader, CardTitle, CardContent } from '$lib/components/ui/card';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import type { PageData } from './$types';
 
@@ -168,70 +169,88 @@
 	</div>
 
 	<!-- 社交媒体链接 -->
-	<div class="w-full max-w-2xl mx-auto rounded-lg border p-6 mo-fade-in-up" use:fadeInUp={{ delay: 0.2 }}>
-		<h2 class="text-center text-sm font-medium text-muted-foreground mb-3">社交</h2>
-		<div class="flex flex-wrap gap-3 justify-center">
-			{#each siteConfig.bio.links as link}
-				{@const isLocalImage = link.icon.startsWith('/')}
-				<a href={link.url} target="_blank" rel="noopener noreferrer">
-					<Button variant="outline" class="flex items-center gap-2">
-						{#if isLocalImage}
-							<img src={link.icon} alt={link.name} class="w-5 h-5" />
-						{:else}
-							<Icon
-								icon={link.icon}
-								class="w-5 h-5"
-								style={link.color ? `color: ${link.color}` : ''}
-							/>
-						{/if}
-						<span class="text-sm font-medium">{link.name}</span>
-					</Button>
-				</a>
-			{/each}
-		</div>
+	<div class="w-full max-w-2xl mx-auto mo-fade-in-up" use:fadeInUp={{ delay: 0.2 }}>
+		<Card>
+			<CardHeader>
+				<CardTitle class="text-center text-muted-foreground">社交</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="flex flex-wrap gap-3 justify-center">
+					{#each siteConfig.bio.links as link}
+						{@const isLocalImage = link.icon.startsWith('/')}
+						<a href={link.url} target="_blank" rel="noopener noreferrer">
+							<Button variant="outline" class="flex items-center gap-2">
+								{#if isLocalImage}
+									<img src={link.icon} alt={link.name} class="w-5 h-5" />
+								{:else}
+									<Icon
+										icon={link.icon}
+										class="w-5 h-5"
+										style={link.color ? `color: ${link.color}` : ''}
+									/>
+								{/if}
+								<span class="text-sm font-medium">{link.name}</span>
+							</Button>
+						</a>
+					{/each}
+				</div>
+			</CardContent>
+		</Card>
 	</div>
 
 	<!-- 导航按钮 -->
-	<div class="w-full max-w-2xl mx-auto rounded-lg border p-6 mo-fade-in-up" use:fadeInUp={{ delay: 0.3 }}>
-		<h2 class="text-center text-sm font-medium text-muted-foreground mb-3">导航</h2>
-		<div class="flex flex-wrap gap-3 justify-center">
-			{#each siteConfig.navLinks as link}
-				{@const isExternal = link.href.startsWith('http')}
-				<a href={link.href} {...isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}}>
-					<Button
-						variant={link.highlight ? 'default' : 'outline'}
-						class="flex items-center gap-2 {link.highlight ? 'ring-2 ring-primary/40 shadow-md shadow-primary/20' : ''}"
-					>
-						<Icon icon={link.icon} class="w-5 h-5" />
-						{link.label}
-						{#if link.badge}
-							<Badge variant="secondary" class="ml-0.5">{link.badge}</Badge>
-						{/if}
-						{#if isExternal}
-							<Icon icon="mdi:open-in-new" class="w-3.5 h-3.5 opacity-60" />
-						{/if}
-					</Button>
-				</a>
-			{/each}
+	<div class="w-full max-w-2xl mx-auto mo-fade-in-up" use:fadeInUp={{ delay: 0.3 }}>
+		<Card>
+			<CardHeader>
+				<CardTitle class="text-center text-muted-foreground">导航</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="flex flex-wrap gap-3 justify-center">
+					{#each siteConfig.navLinks as link}
+						{@const isExternal = link.href.startsWith('http')}
+						<a href={link.href} {...isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}}>
+							<Button
+								variant={link.highlight ? 'default' : 'outline'}
+								class="flex items-center gap-2 {link.highlight ? 'ring-2 ring-primary/40 shadow-md shadow-primary/20' : ''}"
+							>
+								<Icon icon={link.icon} class="w-5 h-5" />
+								{link.label}
+								{#if link.badge}
+									<Badge variant="secondary" class="ml-0.5">{link.badge}</Badge>
+								{/if}
+								{#if isExternal}
+									<Icon icon="mdi:open-in-new" class="w-3.5 h-3.5 opacity-60" />
+								{/if}
+							</Button>
+						</a>
+					{/each}
 
-			<a href="/posts/privacy-policy/">
-				<Button variant="outline" class="flex items-center gap-2">
-					<Icon icon="mdi:shield-lock" class="w-5 h-5" />
-					隐私政策
-				</Button>
-			</a>
-			<a href="#" id="open_preferences_center">
-				<Button variant="outline" class="flex items-center gap-2">
-					<Icon icon="mdi:cookie-settings" class="w-5 h-5" />
-					Cookie 设置
-				</Button>
-			</a>
-		</div>
+					<a href="/posts/privacy-policy/">
+						<Button variant="outline" class="flex items-center gap-2">
+							<Icon icon="mdi:shield-lock" class="w-5 h-5" />
+							隐私政策
+						</Button>
+					</a>
+					<a href="#" id="open_preferences_center">
+						<Button variant="outline" class="flex items-center gap-2">
+							<Icon icon="mdi:cookie-settings" class="w-5 h-5" />
+							Cookie 设置
+						</Button>
+					</a>
+				</div>
+			</CardContent>
+		</Card>
 	</div>
 
 	<!-- 赞助商 -->
-	<div class="w-full max-w-2xl mx-auto flex flex-col items-center rounded-lg border p-6 mo-fade-in-up" use:fadeInUp={{ delay: 0.4 }}>
-		<h2 class="text-center text-sm font-medium text-muted-foreground mb-3">赞助商</h2>
-		<SponsorBanners />
+	<div class="w-full max-w-2xl mx-auto mo-fade-in-up" use:fadeInUp={{ delay: 0.4 }}>
+		<Card>
+			<CardHeader>
+				<CardTitle class="text-center text-muted-foreground">赞助商</CardTitle>
+			</CardHeader>
+			<CardContent class="flex flex-col items-center">
+				<SponsorBanners />
+			</CardContent>
+		</Card>
 	</div>
 </div>
