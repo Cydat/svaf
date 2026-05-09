@@ -362,23 +362,21 @@
 							{/if}
 							
 							<div class="flex-1">
-								<div class="mb-2 flex items-center gap-2">
+								<div class="mb-2 flex flex-wrap items-center gap-x-2 gap-y-0">
 									{#if post.metadata.pinned}
-										<Badge>置顶</Badge>
+										<Badge class="shrink-0">置顶</Badge>
 									{/if}
-									<time class="text-sm text-muted-foreground">
+									<time class="shrink-0 text-sm text-muted-foreground whitespace-nowrap">
 										{formatDate(post.metadata.published)}
 									</time>
 									{#if getPostStats(post.slug)}
-										<span class="text-sm text-muted-foreground">·</span>
-										<span class="text-sm text-muted-foreground">{getPostStats(post.slug)!.wordCount} 字</span>
-										<span class="text-sm text-muted-foreground">·</span>
-										<span class="text-sm text-muted-foreground">约 {getPostStats(post.slug)!.readTime} 分钟</span>
+										<span class="shrink-0 text-sm text-muted-foreground whitespace-nowrap">· {getPostStats(post.slug)!.wordCount} 字</span>
+										<span class="shrink-0 text-sm text-muted-foreground whitespace-nowrap">· 约 {getPostStats(post.slug)!.readTime} 分钟</span>
 									{/if}
 									{#if pageViews[post.slug] !== undefined}
-										<div class="inline" transition:slide={{ duration: 350, easing: quintOut }}>
-											<span class="text-sm text-muted-foreground">· {pageViews[post.slug].toLocaleString()} 次浏览</span>
-										</div>
+										<span class="shrink-0 text-sm text-muted-foreground whitespace-nowrap" transition:slide={{ duration: 350, easing: quintOut }}>
+											· {pageViews[post.slug].toLocaleString()} 次浏览
+										</span>
 									{/if}
 								</div>
 								
