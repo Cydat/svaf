@@ -18,7 +18,7 @@
 	let { data }: { data: PageData } = $props();
 
 	let isLive = $state<boolean>(false);
-	let pageViewsLoaded = $state(false);
+	let pageViewsLoaded = $state(spaCache.peek('homepage-pageviews') !== undefined);
 
 	async function checkLiveStatus() {
 		isLive = await spaCache.get('live-status', async () => {
