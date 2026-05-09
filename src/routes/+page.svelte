@@ -230,8 +230,8 @@
 	</div>
 
 	<!-- 赞助商 -->
-	<div class="w-full max-w-2xl mx-auto mo-fade-in-up" use:fadeInUp={{ delay: 0.4 }}>
-		<h2 class="text-center text-sm font-medium text-muted-foreground mb-3">赞助</h2>
+	<div class="w-full max-w-2xl mx-auto flex flex-col items-center mo-fade-in-up" use:fadeInUp={{ delay: 0.4 }}>
+		<h2 class="text-center text-sm font-medium text-muted-foreground mb-3">赞助商</h2>
 		<SponsorBanners />
 	</div>
 </div>
