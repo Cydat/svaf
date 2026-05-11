@@ -250,6 +250,13 @@
 		}
 	}
 
+	function toggleSelect(path: string) {
+		const s = new Set(selectedPaths);
+		if (s.has(path)) s.delete(path);
+		else s.add(path);
+		selectedPaths = s;
+	}
+
 	async function handleBatchDelete() {
 		if (selectedPaths.size === 0) return;
 		if (!confirm(`确定删除选中的 ${selectedPaths.size} 张图片？`)) return;
@@ -466,7 +473,7 @@
 								{#each myImages as item, i}
 									<div role="button" tabindex="0"
 										class="group relative aspect-square rounded-md overflow-hidden border hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer"
-										onclick={() => { if (selectMode) { const s = new Set(selectedPaths); if (s.has(item.path)) s.delete(item.path); else s.add(item.path); selectedPaths = s; } else { myLbIndex = i; myLbOpen = true; } }
+										onclick={() => { if (selectMode) toggleSelect(item.path); else { myLbIndex = i; myLbOpen = true; } }}
 									>
 										<img
 											src={getImageProxyUrl(item.path)}
@@ -476,7 +483,7 @@
 										/>
 									{#if selectMode}
 											<div class="absolute top-1 left-1 flex items-center justify-center" onclick={(e) => e.stopPropagation()}>
-												<input type="checkbox" checked={selectedPaths.has(item.path)} onchange={() => { const s = new Set(selectedPaths); if (s.has(item.path)) s.delete(item.path); else s.add(item.path); selectedPaths = s; }} class="size-4 accent-primary" />
+												<input type="checkbox" checked={selectedPaths.has(item.path)} onchange={() => toggleSelect(item.path)} class="size-4 accent-primary" />
 											</div>
 										{/if}
 									</div>
