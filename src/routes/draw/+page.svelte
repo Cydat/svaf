@@ -12,6 +12,7 @@
 	import { fetchMyImages, getImageUrl, getImageProxyUrl, forkOutputImage, recommendImage, fetchMyRecommendations } from '$lib/draw/api/client';
 	import { consumeFork } from '$lib/draw/stores/fork';
 	import type { WsRunMessage, WsStatusEvent, WsRunPayload, DrawWorkflow, DrawRecommendation } from '$lib/draw/types';
+	import PageViews from '$lib/components/PageViews.svelte';
 
 	import EnvironmentSwitcher from '$lib/components/draw/EnvironmentSwitcher.svelte';
 	import WorkflowDialog from '$lib/components/draw/WorkflowDialog.svelte';
@@ -283,6 +284,7 @@
 		<div class="flex items-center gap-2">
 			<Icon icon="mdi:palette" class="size-6 text-primary" />
 			<h1 class="text-xl font-bold">AI 生图</h1>
+				<PageViews pathname="/draw/" class="text-sm text-muted-foreground" />
 			{#if onlineCount > 0}
 				<Badge variant="secondary" class="text-xs">
 					<Icon icon="mdi:account-multiple" class="size-3 mr-0.5" />
@@ -452,8 +454,8 @@
 								{/each}
 							</div>
 						{/if}
+					</div>
 
-						
 				{/if}
 			{/if}
 		</TabsContent>
@@ -490,3 +492,4 @@
 	onfork={handleFork}
 	onrecommend={handleRecommend}
 />
+</div>
