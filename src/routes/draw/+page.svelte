@@ -64,6 +64,8 @@
 	// Recommendations
 	let myRecommendations = $state<DrawRecommendation[]>([]);
 	let myRecsLoaded = $state(false);
+	let selectMode = $state(false);
+	let selectedPaths = $state(new Set<string>());
 
 	// WebSocket refs
 	let statusConn: ReturnType<typeof connectStatusWs> | null = null;
@@ -248,15 +250,19 @@
 		}
 	}
 
-	async function handleDelete(path: string) {
-		if (!confirm("确定删除这张图片？")) return;
+	async function handleBatchDelete() {
+		if (selectedPaths.size === 0) return;
+		if (!confirm(`确定删除选中的 ${selectedPaths.size} 张图片？`)) return;
 		try {
-			await deleteMyImage(path);
-			myImages = myImages.filter(i => i.path !== path);
+			await Promise.all(Array.from(selectedPaths).map(p => deleteMyImage(p)));
+			myImages = myImages.filter(i => !selectedPaths.has(i.path));
+			selectMode = false;
+			selectedPaths = new Set();
 		} catch (e) {
-			alert(e instanceof Error ? e.message : "删除失败");
+			alert(e instanceof Error ? e.message : "批量删除失败");
 		}
 	}
+
 
 	async function handleRecommend(path: string) {
 		try {
@@ -430,6 +436,21 @@
 										</div>
 									</Dialog.Content>
 								</Dialog.Root>
+									{#if selectMode}
+										<Button variant="ghost" size="sm" onclick={() => { selectMode = false; selectedPaths = new Set(); }}>
+											<Icon icon="mdi:close" class="size-4" />
+											取消
+										</Button>
+										<Button variant="destructive" size="sm" onclick={handleBatchDelete} disabled={selectedPaths.size === 0}>
+											<Icon icon="mdi:delete-outline" class="size-4" />
+											删除({selectedPaths.size})
+										</Button>
+									{:else}
+										<Button variant="ghost" size="sm" onclick={() => { selectMode = true; selectedPaths = new Set(); }}>
+											<Icon icon="mdi:select" class="size-4" />
+											选择
+										</Button>
+									{/if}
 								<Button variant="ghost" size="sm" onclick={() => { myImagesLoaded = false; loadMyImages(); }} disabled={myImagesLoading}>
 									<Icon icon="mdi:refresh" class="size-4" />
 								</Button>
@@ -453,7 +474,11 @@
 											class="w-full h-full object-cover"
 											loading="lazy"
 										/>
-									<button type="button" onclick={(e) => { e.stopPropagation(); handleDelete(item.path); }} class="absolute top-1 right-1 size-6 flex items-center justify-center rounded-full bg-background/80 opacity-0 group-hover:opacity-100 hover:bg-destructive hover:text-destructive-foreground transition-all"><Icon icon="mdi:trash-can-outline" class="size-3.5" /></button>
+									{#if selectMode}
+											<div class="absolute top-1 left-1 flex items-center justify-center" onclick={(e) => e.stopPropagation()}>
+												<input type="checkbox" checked={selectedPaths.has(item.path)} onchange={() => { const s = new Set(selectedPaths); if (s.has(item.path)) s.delete(item.path); else s.add(item.path); selectedPaths = s; }} class="size-4 accent-primary" />
+											</div>
+										{/if}
 									</div>
 								{/each}
 							</div>
