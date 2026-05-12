@@ -7,20 +7,13 @@
 	import { fetchGpuStatus, fetchAnnouncement } from '$lib/draw/api/client';
 	import type { DrawGpuInfo } from '$lib/draw/types';
 
-	// 合肥市居民用电均价 0.5653 元/kWh
-	const ELECTRICITY_RATE = 0.5653;
-
 	let gpu = $state<DrawGpuInfo[]>([]);
 	let gpuAvailable = $state(false);
 	let gpuError = $state('');
 	let announcement = $state<{ enabled: boolean; title: string; content: string } | null>(null);
 	let loading = $state(true);
-
-	// 电费累加
-	let totalKWh = $state(0);
-	let totalCost = $derived(totalKWh * ELECTRICITY_RATE);
+	let totalCost = $state(0);
 	let lastPowerDraw = $state(0);
-	let lastTick = $state(Date.now());
 
 	$effect(() => {
 		loadStatus();
@@ -34,16 +27,8 @@
 			gpuAvailable = gpuRes.available;
 			gpuError = gpuRes.error || '';
 			announcement = annRes.announcement;
-
-			// 累加电费：总功耗(W) * 时间差 / 1000 / 3600 => kWh
-			const now = Date.now();
-			const totalW = gpu.reduce((sum, g) => sum + (g['power.draw'] || 0), 0);
-			if (lastTick > 0 && totalW > 0) {
-				const hours = (now - lastTick) / 3600000;
-				totalKWh += (totalW * hours) / 1000;
-			}
-			lastPowerDraw = totalW;
-			lastTick = now;
+			totalCost = gpuRes.total_cost ?? totalCost;
+			lastPowerDraw = gpu.reduce((sum, g) => sum + (g['power.draw'] || 0), 0);
 		} catch {
 			// ignore
 		} finally {
@@ -51,7 +36,7 @@
 		}
 	}
 
-	// 每 5 秒自动刷新以累加电费
+	// 每 5 秒自动刷新
 	$effect(() => {
 		const interval = setInterval(loadStatus, 5000);
 		return () => clearInterval(interval);

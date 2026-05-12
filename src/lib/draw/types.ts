@@ -90,6 +90,8 @@ export interface DrawGpuResponse {
 	gpus: DrawGpuInfo[];
 	poll_interval_ms?: number;
 	error?: string;
+	total_kwh?: number;
+	total_cost?: number;
 }
 
 export interface DrawAnnouncementResponse {
