@@ -611,9 +611,7 @@
 
 		<!-- More Tab -->
 		<TabsContent value="more" class="mt-4">
-			{#if activeTab === 'more'}
-				<StatusMonitor />
-			{/if}
+			<StatusMonitor />
 		</TabsContent>
 	</Tabs>
 
