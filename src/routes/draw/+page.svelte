@@ -103,6 +103,13 @@
 	let showMaintenanceDialog = $state(false);
 	let maintenanceHtml = $derived(renderForumMarkdown(maintenance?.message));
 
+	$effect(() => {
+		if (showMaintenanceDialog) {
+			document.body.style.overflow = 'hidden';
+			return () => { document.body.style.overflow = ''; };
+		}
+	});
+
 	// Tab state
 	let activeTab = $state('generate');
 
