@@ -56,9 +56,9 @@
 		restoreState();
 	});
 
-	// Auto-save prompt on change
-	$effect(() => {
-		prompt;
+	function handlePromptInput(e: Event) {
+		const el = e.target as HTMLTextAreaElement;
+		prompt = el.value;
 		if (typeof localStorage === 'undefined') return;
 		try {
 			const saved = localStorage.getItem(STORAGE_KEY);
@@ -66,7 +66,7 @@
 			parsed.prompt = prompt;
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
 		} catch {}
-	});
+	}
 
 	$effect(() => {
 		const unsub = apiError.subscribe((v) => {
@@ -234,7 +234,8 @@
 			描述
 		</h3>
 		<textarea
-			bind:value={prompt}
+			value={prompt}
+			oninput={handlePromptInput}
 			placeholder="输入你想要的修改描述，例如：把人物的衣服换成红色"
 			class="w-full min-h-[80px] rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y"
 			disabled={generating}
