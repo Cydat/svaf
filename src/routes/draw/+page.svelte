@@ -154,10 +154,7 @@
 		}
 
 		// Connect status WebSocket
-		statusConn = connectStatusWs(
-			currentBaseUrl,
-			handleStatusMessage
-		);
+		statusConn = connectStatusWs(currentBaseUrl, handleStatusMessage, undefined, () => { globalBusy = false; });
 
 		return () => {
 			u1();
@@ -171,7 +168,7 @@
 		const url = currentBaseUrl;
 		if (!url) return;
 		statusConn?.close();
-		statusConn = connectStatusWs(url, handleStatusMessage);
+		statusConn = connectStatusWs(url, handleStatusMessage, undefined, () => { globalBusy = false; });
 	});
 
 	function handleStatusMessage(msg: WsStatusEvent) {
