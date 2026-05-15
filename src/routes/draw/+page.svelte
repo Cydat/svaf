@@ -313,7 +313,7 @@
 		try {
 			const res = await fetchMyQueue();
 			const now = res.items;
-			myQueueItems = now.filter(it => it.status === 'pending' || it.status === 'waiting' || it.status === 'running' || it.status === 'failed' || it.status === 'done');
+			myQueueItems = now.filter(it => it.status === 'pending' || it.status === 'waiting' || it.status === 'running');
 		} catch {
 			myQueueItems = [];
 		} finally {
