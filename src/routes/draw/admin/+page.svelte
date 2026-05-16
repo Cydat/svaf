@@ -485,8 +485,9 @@ let loadingMore = $state(false);
 	async function handleClearQueue() {
 		clearing = true;
 		try {
-			const res = await clearQueue();
-			showMsg('success', `已清空队列，共清理 ${res.cleared} 个任务`);
+			await clearQueue();
+			showMsg('success', '已清空队列');
+			if (typeof loadDebug === 'function') loadDebug();
 		} catch (e) {
 			showMsg('error', e instanceof Error ? e.message : '清空队列失败');
 		} finally {
