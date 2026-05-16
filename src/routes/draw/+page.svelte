@@ -134,8 +134,24 @@
 	});
 
 	// Tab state
-	let activeTab = $state('generate');
-	let genSubTab = $state('txt2img');
+	let activeTab = $state(location.hash?.slice(1) || 'generate');
+	let genSubTab = $state(location.hash?.includes('img2img') ? 'img2img' : 'txt2img');
+
+	// 从 URL hash 恢复 tab 状态
+	$effect(() => {
+		if (typeof location !== 'undefined') {
+			const h = location.hash?.slice(1);
+			if (h === 'mine' || h === 'featured' || h === 'generate') activeTab = h;
+			if (h === 'img2img' || h === 'txt2img') genSubTab = h;
+		}
+	});
+
+	// tab 变化时更新 URL hash
+	$effect(() => {
+		if (typeof location !== 'undefined' && activeTab) {
+			history.replaceState(null, '', '#' + activeTab);
+		}
+	});
 
 	// Persist form state to localStorage
 	$effect(() => {

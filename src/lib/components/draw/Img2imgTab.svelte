@@ -145,11 +145,13 @@
 	});
 
 	function saveState() {
-		if (typeof localStorage === 'undefined') return;
-		const data: any = { prompt };
-		const savedDataUrls = images.map(i => i.dataUrl).filter(u => u.startsWith('data:'));
-		if (savedDataUrls.length) data.images = savedDataUrls;
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+		try {
+			if (typeof localStorage === 'undefined') return;
+			const data: any = { prompt };
+			const savedDataUrls = images.map(i => i.dataUrl).filter(u => u.startsWith('data:'));
+			if (savedDataUrls.length) data.images = savedDataUrls;
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+		} catch {}
 	}
 
 	function handleFileInput(e: Event) {
@@ -183,7 +185,7 @@
 		saveState();
 	}
 
-function handlePromptInput(e: Event) {
+	function handlePromptInput(e: Event) {
 		const el = e.target as HTMLTextAreaElement;
 		prompt = el.value;
 		saveState();

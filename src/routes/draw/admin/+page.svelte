@@ -27,7 +27,16 @@ import ImageLightbox from '$lib/components/draw/ImageLightbox.svelte';
 
 	let authToken = $state<string | null>(null);
 	let currentBaseUrl = $state('');
-	let activeTab = $state('announcement');
+	let activeTab = $state(location.hash?.slice(1) || 'announcement');
+
+	$effect(() => {
+		const h = location.hash?.slice(1);
+		if (h) activeTab = h;
+	});
+
+	$effect(() => {
+		if (activeTab) history.replaceState(null, '', '#' + activeTab);
+	});
 	let loading = $state(false);
 	let clearing = $state(false);
 	let message = $state<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -849,7 +858,7 @@ function formatTime(ts: number) {
 	$effect(() => {
 		if (activeTab === 'debug') {
 			loadDebug();
-			debugInterval = setInterval(loadDebug, 1000);
+			debugInterval = setInterval(loadDebug, 2000);
 		} else {
 			if (debugInterval) {
 				clearInterval(debugInterval);
@@ -1506,7 +1515,7 @@ function formatTime(ts: number) {
 													</td>
 													<td class="py-1 pr-2 text-muted-foreground">{item.created_ago}s前</td>
 													<td class="py-1 pr-2 text-muted-foreground">{item.started_ago != null ? `${item.started_ago}s前` : '-'}</td>
-													<td class="py-1 pr-2 text-red-500 max-w-[200px] truncate">{item.error || '-'}</td>
+													<td class="py-1 pr-2 text-red-500 break-all max-w-xs">{item.error || '-'}</td>
 												</tr>
 											{/each}
 										</tbody>
