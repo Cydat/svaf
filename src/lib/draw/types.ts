@@ -268,7 +268,7 @@ export interface AdminGcResult {
 }
 
 export interface AdminLlmConfig {
-	provider: 'local' | 'google' | 'custom' | 'anthropic';
+	provider: 'local' | 'google' | 'custom';
 	local_endpoint: string;
 	google_api_key: string;
 	google_model: string;
@@ -276,8 +276,5 @@ export interface AdminLlmConfig {
 	custom_endpoint: string;
 	custom_api_key: string;
 	custom_model: string;
-	anthropic_api_key: string;
-	anthropic_model: string;
-	anthropic_base_url: string;
 	llm_stream: boolean;
 }

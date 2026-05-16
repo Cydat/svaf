@@ -162,6 +162,17 @@ export async function deleteMyImage(path: string) {
 
 export async function addToQueue(payload: {
 	direct_prompt: string;
+	nl_prompt?: string;
+	rewrite?: boolean;
+	width?: number;
+	height?: number;
+	style_tags?: string;
+	negative_prompt?: string;
+	seed?: number;
+	workflow_path?: string;
+	inline_workflow?: unknown;
+	safety_rating?: string;
+	denoise?: number;
 	image1_name?: string;
 	image2_name?: string;
 }) {
