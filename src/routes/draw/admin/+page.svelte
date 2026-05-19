@@ -1176,7 +1176,7 @@ function formatTime(ts: number) {
 							<div class="text-sm text-muted-foreground py-4 text-center">无待审核自荐</div>
 						{:else}
 							<div class="space-y-3">
-								{#each recommendations as rec (rec.id || rec.image_path)}
+								{#each recommendations as rec, i (rec.id || i)}
 									<div class="border rounded-lg p-3 space-y-2">
 										<div class="flex items-start justify-between gap-2">
 											<div class="space-y-1 min-w-0">
