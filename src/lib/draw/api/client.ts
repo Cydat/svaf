@@ -174,6 +174,7 @@ export async function addToQueue(payload: {
 	denoise?: number;
 	image1_name?: string;
 	image2_name?: string;
+		turnstile_token?: string;
 }) {
 	return drawRequest<{ queued: boolean; position: number; item_id: number }>('/api/draw/queue', {
 		method: 'POST',

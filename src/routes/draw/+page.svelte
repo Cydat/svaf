@@ -24,6 +24,7 @@
 	import FeaturedTab from '$lib/components/draw/FeaturedTab.svelte';
 	import Img2imgTab from '$lib/components/draw/Img2imgTab.svelte';
 		import ImageLightbox from '$lib/components/draw/ImageLightbox.svelte';
+	import TurnstileWidget from '$lib/components/TurnstileWidget.svelte';
 
 	// State
 	let currentBaseUrl = $state('');
@@ -135,6 +136,7 @@
 	// API error state
 	let apiErrorMessage = $state("");
 	let apiStatusValue = $state("checking");
+		let turnstileToken = $state("");
 		let forkMessage = $state("");
 
 	$effect(() => {
@@ -340,6 +342,7 @@ async function startGeneration() {
 					workflow_path: workflowPath,
 					inline_workflow: inlineWorkflow || undefined,
 					inline_workflow_api: inlineWorkflowApi || undefined,
+				turnstile_token: turnstileToken || undefined,
 				});
 				queueSuccess = '成功加入队列！等待生图中，前往"我的"页面查看详情。';
 				loadMyQueue();
@@ -671,6 +674,12 @@ async function startGeneration() {
 						<WorkflowDialog bind:value={workflowPath} onselect={handleWorkflowSelect} onpromptload={handlePromptLoad} />
 						<StyleDialog bind:value={styleTags} bind:name={styleName} onselect={handleStyleSelect} />
 					</div>
+
+					<TurnstileWidget
+						siteKey="0x4AAAAAADSVSh5jjelMNlrv"
+						onToken={(t) => (turnstileToken = t)}
+						onExpired={() => (turnstileToken = '')}
+					/>
 
 					<PromptForm
 						bind:directPrompt
