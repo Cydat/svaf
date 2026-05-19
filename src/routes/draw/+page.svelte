@@ -321,6 +321,9 @@ async function startGeneration() {
 			}
 			if (!workflowPath && !inlineWorkflow) {
 				alert('请选择工作流');
+				}
+				if (!turnstileToken) {
+					alert('请完成人机验证');
 				return;
 			}
 
