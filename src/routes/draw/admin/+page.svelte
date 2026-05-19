@@ -1176,20 +1176,20 @@ function formatTime(ts: number) {
 							<div class="text-sm text-muted-foreground py-4 text-center">无待审核自荐</div>
 						{:else}
 							<div class="space-y-3">
-								{#each recommendations as rec}
+								{#each recommendations as rec (rec.id || rec.image_path)}
 									<div class="border rounded-lg p-3 space-y-2">
 										<div class="flex items-start justify-between gap-2">
 											<div class="space-y-1 min-w-0">
 												<div class="flex items-center gap-2">
-													<Badge variant="outline" class="text-xs">ID: {rec.id.slice(0, 8)}</Badge>
-													<span class="text-xs text-muted-foreground">{formatTime(rec.timestamp)}</span>
+													<Badge variant="outline" class="text-xs">ID: {rec.id?.slice(0, 8) || '???'}</Badge>
+													<span class="text-xs text-muted-foreground">{rec.timestamp ? formatTime(rec.timestamp) : ''}</span>
 												</div>
 												<div class="text-xs">
 													<span class="text-muted-foreground">图片：</span>
 													<span class="font-mono">{rec.image_path}</span>
 												</div>
 												<div class="text-xs">
-													<span class="text-muted-foreground">用户ID：</span>{rec.user_id}
+													<span class="text-muted-foreground">用户ID：</span>{rec.user_id ?? '?'}
 												</div>
 												{#if rec.user_reason}
 													<div class="text-xs">
