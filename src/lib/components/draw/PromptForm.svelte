@@ -55,6 +55,7 @@
 	let translating = $state(false);
 	let translateError = $state("");
 	let translateToken = $state("");
+		let translateTick = $state(0);
 	let llmPrompt = $state("");
 	let hasTranslated = $state(false);
 
@@ -135,6 +136,7 @@
 						llmPrompt = data.positive; hasTranslated = true;
 						directPrompt = data.positive;
 						negativePrompt = data.negative;
+							translateTick++;
 					} else if (ev === 'error') {
 						translateError = '转换失败: ' + (data.message || '未知错误');
 					}
@@ -173,6 +175,7 @@
 				siteKey="0x4AAAAAADSVSh5jjelMNlrv"
 				onToken={(t) => (translateToken = t)}
 				onExpired={() => (translateToken = '')}
+					tick={translateTick}
 			/>
 
 			<div class="flex flex-wrap gap-2 mt-1.5">
