@@ -23,23 +23,19 @@ function getAllPosts() {
 
 function extractUsedImages(content) {
 	const used = new Set();
+	const addRef = (raw) => {
+		const ref = raw.trim();
+		if (!ref.startsWith('img/')) return;
+		used.add(decodeURIComponent(ref.slice(4)));
+	};
 	const mdRe = /!\[.*?\]\(([^)]+)\)/g;
 	let m;
-	while ((m = mdRe.exec(content)) !== null) {
-		const ref = m[1].trim();
-		if (ref.startsWith('img/')) used.add(ref.slice(4));
-	}
+	while ((m = mdRe.exec(content)) !== null) addRef(m[1]);
 	const htmlRe = /<img[^>]+src=["']([^"']+)["']/gi;
-	while ((m = htmlRe.exec(content)) !== null) {
-		const ref = m[1].trim();
-		if (ref.startsWith('img/')) used.add(ref.slice(4));
-	}
+	while ((m = htmlRe.exec(content)) !== null) addRef(m[1]);
 	const fmRe = /^image:\s*(.+)$/m;
 	const fm = content.match(fmRe);
-	if (fm) {
-		const ref = fm[1].trim();
-		if (ref.startsWith('img/')) used.add(ref.slice(4));
-	}
+	if (fm) addRef(fm[1]);
 	return used;
 }
 
