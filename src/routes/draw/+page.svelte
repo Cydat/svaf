@@ -807,51 +807,36 @@ async function startGeneration(mode = 'wai') {
 		<!-- My Images Tab -->
 		<TabsContent value="mine" class="mt-4">
 			{#if activeTab === 'mine'}
+				<div>
 				{#if !isLoggedIn}
 					<Alert>
 						<Icon icon="mdi:account-alert-outline" class="size-4" />
-						<AlertDescription class="text-xs">
-							请先<a href="/forum/auth/login?redirect=/draw/" class="underline font-medium">登录论坛</a>查看自己的图片。
-						</AlertDescription>
+						<AlertDescription class="text-xs">请先<a href="/forum/auth/login?redirect=/draw/" class="underline font-medium">登录论坛</a>查看自己的图片。</AlertDescription>
 					</Alert>
 				{/if}
 				{#if isLoggedIn}
 					<div class="space-y-3">
-						<!-- 队列状态 -->
 						<div class="space-y-2">
 							{#if myQueueLoading}
 								<div class="text-xs text-muted-foreground py-3 text-center">加载中...</div>
 							{:else if myQueueItems.length > 0}
 								<div class="flex items-center justify-between">
-									<h3 class="text-sm font-medium flex items-center gap-1.5">
-										<Icon icon="mdi:queue-play" class="size-4" />
-										队列状态
-									</h3>
-									<Button variant="ghost" size="sm" onclick={() => { myQueueLoading = true; loadMyQueue(); }}>
-										<Icon icon="mdi:refresh" class="size-4" />
-									</Button>
+									<h3 class="text-sm font-medium flex items-center gap-1.5"><Icon icon="mdi:queue-play" class="size-4" />队列状态</h3>
+									<Button variant="ghost" size="sm" onclick={() => { myQueueLoading = true; loadMyQueue(); }}><Icon icon="mdi:refresh" class="size-4" /></Button>
 								</div>
 								<div class="space-y-1">
 									{#each myQueueItems as item}
 										<div class="flex items-center gap-2 text-xs border rounded-lg px-3 py-2 {item.status === 'failed' ? 'border-red-300 bg-red-50 dark:bg-red-950/30' : ''}">
 										{#if item.status === 'running'}
-											<Icon icon="mdi:loading" class="size-4 animate-spin text-primary" />
-											<span class="flex-1">正在生图中</span>
+											<Icon icon="mdi:loading" class="size-4 animate-spin text-primary" /><span class="flex-1">正在生图中</span>
 										{:else if item.status === 'done'}
-											<Icon icon="mdi:check-circle" class="size-4 text-green-500" />
-											<span class="flex-1">生图完成，请前往"我的图片"查看</span>
+											<Icon icon="mdi:check-circle" class="size-4 text-green-500" /><span class="flex-1">生图完成</span>
 										{:else if item.status === 'failed'}
-											<Icon icon="mdi:alert-circle" class="size-4 text-red-500" />
-											<span class="flex-1 truncate">{item.error || '生图失败'}</span>
+											<Icon icon="mdi:alert-circle" class="size-4 text-red-500" /><span class="flex-1 truncate">{item.error || '生图失败'}</span>
 										{:else if item.status === 'cancelled'}
-											<Icon icon="mdi:cancel" class="size-4 text-muted-foreground" />
-											<span class="flex-1">已取消</span>
-										{:else if item.status === 'waiting'}
-											<Icon icon="mdi:clock-outline" class="size-4 text-muted-foreground" />
-											<span class="flex-1">等待生图中，前面还有 {item.position ? item.position - 1 : 0} 位</span>
+											<Icon icon="mdi:cancel" class="size-4 text-muted-foreground" /><span class="flex-1">已取消</span>
 										{:else}
-											<Icon icon="mdi:clock-outline" class="size-4 text-muted-foreground" />
-											<span class="flex-1">等待生图中，前面还有 {item.position ? item.position - 1 : 0} 位</span>
+											<Icon icon="mdi:clock-outline" class="size-4 text-muted-foreground" /><span class="flex-1">等待中</span>
 										{/if}
 										</div>
 									{/each}
@@ -860,89 +845,28 @@ async function startGeneration(mode = 'wai') {
 								<div class="text-xs text-muted-foreground py-3 text-center">暂无排队任务</div>
 							{/if}
 						</div>
-
 						<div class="flex items-center justify-between">
-							<h3 class="text-sm font-medium flex items-center gap-1.5">
-								<Icon icon="mdi:account-outline" class="size-4" />
-								我的图片
-								<span class="text-xs text-muted-foreground">({myImages.length}/{myImagesTotal})</span>
-							</h3>
-							<div class="flex items-center gap-1">
-								<Dialog.Root>
-									<Dialog.Trigger>
-										{#snippet child({ props })}
-											<Button variant="outline" size="sm" onclick={loadMyRecommendations} {...props}>
-												<Icon icon="mdi:star-plus-outline" class="size-4" />
-												自荐
-											</Button>
-										{/snippet}
-									</Dialog.Trigger>
-									<Dialog.Content class="sm:max-w-lg">
-										<Dialog.Header>
-											<Dialog.Title class="flex items-center gap-2">
-												<Icon icon="mdi:star-plus-outline" class="size-5" />
-												我的自荐
-											</Dialog.Title>
-										</Dialog.Header>
-										<div class="max-h-96 overflow-y-auto space-y-2">
-											{#if !myRecsLoaded}
-												<div class="text-xs text-muted-foreground py-4 text-center">加载中...</div>
-											{:else if myRecommendations.length === 0}
-												<div class="text-xs text-muted-foreground py-4 text-center">暂无自荐记录</div>
-											{:else}
-												{#each myRecommendations as rec}
-													<div class="border rounded-lg p-3 space-y-1">
-														<div class="flex items-center gap-2 text-xs">
-															<img src={getImageProxyUrl(rec.image_path)} alt="" class="size-10 rounded object-cover border shrink-0" />
-															<span class="truncate flex-1">{rec.image_path}</span>
-															<Badge variant={rec.status === "approved" ? "default" : rec.status === "rejected" ? "destructive" : "secondary"} class="text-[10px] shrink-0">
-																{recStatusBadge(rec.status)}
-															</Badge>
-														</div>
-														{#if rec.user_reason}
-															<div class="text-[10px] text-muted-foreground">理由: {rec.user_reason}</div>
-														{/if}
-														{#if rec.admin_reason}
-															<div class="text-[10px] text-muted-foreground">管理员: {rec.admin_reason}</div>
-														{/if}
-													</div>
-												{/each}
-											{/if}
-										</div>
-									</Dialog.Content>
-</Dialog.Root>
-
+							<h3 class="text-sm font-medium flex items-center gap-1.5"><Icon icon="mdi:account-outline" class="size-4" />我的图片 <span class="text-xs text-muted-foreground">({myImages.length}/{myImagesTotal})</span></h3>
+						</div>
 						{#if myImagesLoading}
 							<div class="text-xs text-muted-foreground py-8 text-center">加载中...</div>
-						{/if}
-						{#if !myImagesLoading && myImages.length === 0}
+						{:else if myImages.length === 0}
 							<div class="text-xs text-muted-foreground py-8 text-center">你还没有生成过图片</div>
-						{/if}
-						{#if !myImagesLoading && myImages.length > 0}
+						{:else}
 							<div class="flex gap-2 items-start">
 								{#each imgColumns as col, ci (ci)}
 									<div class="flex flex-1 flex-col gap-2 min-w-0">
 										{#each col as path (ci + '-' + path)}
 											{@const item = myImages.find(i => i.path === path)}
 											{#if item}
-												<div role="button" tabindex="0"
-													class="group relative rounded-md overflow-hidden border hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer"
-													onclick={() => { if (selectMode) toggleSelect(item.path); else { myLbIndex = myImages.indexOf(item); myLbOpen = true; } }}
-												>
-													<img
-														src={getImageProxyUrl(item.path)}
-														alt={item.path}
-														loading="lazy"
-														decoding="async"
-														style="aspect-ratio: 1;"
-														onload={handleImgLoad}
-														class="block w-full h-auto bg-muted"
-													/>
-												{#if selectMode}
+												<div role="button" tabindex="0" class="group relative rounded-md overflow-hidden border hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer"
+													onclick={() => { if (selectMode) toggleSelect(item.path); else { myLbIndex = myImages.indexOf(item); myLbOpen = true; } }}>
+													<img src={getImageProxyUrl(item.path)} alt={item.path} loading="lazy" decoding="async" style="aspect-ratio: 1;" onload={handleImgLoad} class="block w-full h-auto bg-muted" />
+													{#if selectMode}
 														<div class="absolute top-1 left-1 flex items-center justify-center" onclick={(e) => e.stopPropagation()}>
 															<input type="checkbox" checked={selectedPaths.has(item.path)} onchange={() => toggleSelect(item.path)} class="size-4 accent-primary" />
 														</div>
-												{/if}
+													{/if}
 												</div>
 											{/if}
 										{/each}
@@ -951,13 +875,13 @@ async function startGeneration(mode = 'wai') {
 							</div>
 							{#if hasMore}
 								<div class="flex justify-center pt-2">
-									<Button variant="outline" size="sm" onclick={showMoreMyImages}>
-										加载更多（{myImages.length - myImagesDisplayLimit} 张）
-									</Button>
+									<Button variant="outline" size="sm" onclick={showMoreMyImages}>加载更多（{myImages.length - myImagesDisplayLimit} 张）</Button>
 								</div>
 							{/if}
 						{/if}
+					</div>
 				{/if}
+				</div>
 			{/if}
 		</TabsContent>
 
