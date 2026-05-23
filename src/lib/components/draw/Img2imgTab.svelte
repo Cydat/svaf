@@ -16,10 +16,12 @@
 		turnstileToken = $bindable(''),
 			turnstileTick = $bindable(0),
 		pointsCostSubmit = 0,
+		turnstileEnabled = true,
 	}: {
 		turnstileToken?: string;
 			turnstileTick?: number;
 		pointsCostSubmit?: number;
+		turnstileEnabled?: boolean;
 	} = $props();
 
 	let currentBaseUrl = $state('');
@@ -357,12 +359,14 @@
 		></textarea>
 	</div>
 
-	<TurnstileWidget
-			siteKey="0x4AAAAAADSVSh5jjelMNlrv"
-			tick={turnstileTick}
-			onToken={(t) => (turnstileToken = t)}
-			onExpired={() => (turnstileToken = '')}
-		/>
+	{#if turnstileEnabled}
+		<TurnstileWidget
+				siteKey="0x4AAAAAADSVSh5jjelMNlrv"
+				tick={turnstileTick}
+				onToken={(t) => (turnstileToken = t)}
+				onExpired={() => (turnstileToken = '')}
+			/>
+	{/if}
 
 		<!-- Run Button -->
 	<Button

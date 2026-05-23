@@ -758,22 +758,24 @@ async function startGeneration(mode = 'wai') {
 								bind:workflowPrompt bind:workflowNegativePrompt bind:width bind:height
 								onsubmit={() => startGeneration('wai')} disabled={queuing || !isLoggedIn} busy={queuing}
 								bind:sameSeed bind:forkSeed
-								pointsCostTranslate={pointsConfig?.llm_translate ?? 0}
-								pointsCostSubmit={pointsConfig?.text_to_image ?? 0}
-							/>
-						</TabsContent>
+						pointsCostTranslate={pointsConfig?.llm_translate ?? 0}
+						pointsCostSubmit={pointsConfig?.text_to_image ?? 0}
+						turnstileEnabled={pointsConfig?.turnstile_enabled ?? true}
+					/>
+				</TabsContent>
 
-						<TabsContent value="anima" class="space-y-4 mt-4">
-							<WorkflowDialog bind:value={workflowPath} onselect={handleWorkflowSelect} onpromptload={handlePromptLoad} subdir="ANIMA" />
-							<PromptForm
-								bind:turnstileToken bind:turnstileTick bind:directPrompt bind:negativePrompt bind:nlPrompt
-								bind:workflowPrompt bind:workflowNegativePrompt bind:width bind:height
-								onsubmit={() => startGeneration('anima')} disabled={queuing || !isLoggedIn} busy={queuing}
-								bind:sameSeed bind:forkSeed
-								pointsCostTranslate={pointsConfig?.llm_translate ?? 0}
-								pointsCostSubmit={pointsConfig?.text_to_image_anima ?? 20}
-								llmMode="anima"
-							/>
+				<TabsContent value="anima" class="space-y-4 mt-4">
+					<WorkflowDialog bind:value={workflowPath} onselect={handleWorkflowSelect} onpromptload={handlePromptLoad} subdir="ANIMA" />
+					<PromptForm
+						bind:turnstileToken bind:turnstileTick bind:directPrompt bind:negativePrompt bind:nlPrompt
+						bind:workflowPrompt bind:workflowNegativePrompt bind:width bind:height
+						onsubmit={() => startGeneration('anima')} disabled={queuing || !isLoggedIn} busy={queuing}
+						bind:sameSeed bind:forkSeed
+						pointsCostTranslate={pointsConfig?.llm_translate ?? 0}
+						pointsCostSubmit={pointsConfig?.text_to_image_anima ?? 20}
+						llmMode="anima"
+						turnstileEnabled={pointsConfig?.turnstile_enabled ?? true}
+					/>
 						</TabsContent>
 					</Tabs>
 
@@ -793,7 +795,7 @@ async function startGeneration(mode = 'wai') {
 				</TabsContent>
 
 				<TabsContent value="img2img" class="mt-4">
-					<Img2imgTab bind:turnstileToken bind:turnstileTick pointsCostSubmit={pointsConfig?.image_to_image ?? 0} />
+					<Img2imgTab bind:turnstileToken bind:turnstileTick pointsCostSubmit={pointsConfig?.image_to_image ?? 0} turnstileEnabled={pointsConfig?.turnstile_enabled ?? true} />
 				</TabsContent>
 
 			</Tabs>

@@ -33,6 +33,7 @@
 		pointsCostTranslate = 0,
 		pointsCostSubmit = 0,
 		llmMode = '',
+		turnstileEnabled = true,
 	}: {
 		directPrompt?: string;
 		negativePrompt?: string;
@@ -53,6 +54,7 @@
 		pointsCostTranslate?: number;
 		pointsCostSubmit?: number;
 		llmMode?: string;
+		turnstileEnabled?: boolean;
 	} = $props();
 
 	let resolutions = $state<DrawResolution[]>([]);
@@ -156,12 +158,14 @@
 			placeholder="一个蓝发少女站在花园里..."
 			class="w-full rounded-md border bg-background px-3 py-2 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
 		></textarea>
-			<TurnstileWidget
-				siteKey="0x4AAAAAADSVSh5jjelMNlrv"
-				onToken={(t) => (translateToken = t)}
-				onExpired={() => (translateToken = '')}
+			{#if turnstileEnabled}
+				<TurnstileWidget
+					siteKey="0x4AAAAAADSVSh5jjelMNlrv"
+					onToken={(t) => (translateToken = t)}
+					onExpired={() => (translateToken = '')}
 					tick={translateTick}
-			/>
+				/>
+			{/if}
 
 			<div class="flex flex-wrap gap-2 mt-1.5">
 			<Button size="sm" variant="outline" onclick={handleTranslate} disabled={translating || !nlPrompt?.trim()}>
@@ -261,12 +265,14 @@
 		</div>
 	{/if}
 
-	<TurnstileWidget
-			siteKey="0x4AAAAAADSVSh5jjelMNlrv"
-			tick={turnstileTick}
-			onToken={(t) => (turnstileToken = t)}
-			onExpired={() => (turnstileToken = '')}
-		/>
+	{#if turnstileEnabled}
+		<TurnstileWidget
+				siteKey="0x4AAAAAADSVSh5jjelMNlrv"
+				tick={turnstileTick}
+				onToken={(t) => (turnstileToken = t)}
+				onExpired={() => (turnstileToken = '')}
+			/>
+	{/if}
 
 		<!-- Submit button -->
 	<Button
