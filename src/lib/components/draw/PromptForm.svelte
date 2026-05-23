@@ -126,6 +126,11 @@
 		}
 		onsubmit?.();
 	}
+
+	function selectRes(r: DrawResolution) {
+		width = r.w;
+		height = r.h;
+	}
 </script>
 
 <div class="space-y-3">
@@ -229,11 +234,6 @@
 	<!-- Safety rating -->
 
 	<!-- Resolution presets -->
-		function selectRes(r: DrawResolution) {
-			width = r.w;
-			height = r.h;
-		}
-
 			{#if resolutions.length > 0}
 		<div class="space-y-1.5">
 			<Label class="text-xs font-medium">分辨率</Label>
