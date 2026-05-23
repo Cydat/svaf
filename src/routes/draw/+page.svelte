@@ -38,6 +38,7 @@
 	let plans = $state<Array<{ id: string; name: string; url: string; points: number }>>([]);
 	let pointsConfig = $state<{ text_to_image: number; image_to_image: number; llm_translate: number; signup_bonus: number; text_to_image_anima: number } | null>(null);
 	let walletTimer: ReturnType<typeof setInterval> | null = null;
+	let animaHelpOpen = $state(false);
 	let queuing = $state(false);
 	let queueSuccess = $state("");
 	let queueError = $state("");
@@ -745,7 +746,9 @@ async function startGeneration(mode = 'wai') {
 					<Tabs bind:value={genTxtSubTab} class="w-full">
 						<TabsList class="w-full">
 							<TabsTrigger value="wai" class="flex-1 text-xs">WAI</TabsTrigger>
-							<TabsTrigger value="anima" class="flex-1 text-xs">Anima</TabsTrigger>
+							<TabsTrigger value="anima" class="flex-1 text-xs">Anima
+								<button onclick={(e) => { e.stopPropagation(); animaHelpOpen = true; }} class="inline-flex items-center justify-center size-4 rounded-full border border-muted-foreground/40 text-muted-foreground text-[10px] font-bold ml-1 hover:border-primary hover:text-primary transition-colors" title="关于 Anima">?</button>
+							</TabsTrigger>
 						</TabsList>
 
 						<TabsContent value="wai" class="space-y-4 mt-4">
@@ -906,27 +909,23 @@ async function startGeneration(mode = 'wai') {
 											{/if}
 										</div>
 									</Dialog.Content>
-								</Dialog.Root>
-									{#if selectMode}
-										<Button variant="ghost" size="sm" onclick={() => { selectMode = false; selectedPaths = new Set(); }}>
-											<Icon icon="mdi:close" class="size-4" />
-											取消
-										</Button>
-										<Button variant="destructive" size="sm" onclick={handleBatchDelete} disabled={selectedPaths.size === 0}>
-											<Icon icon="mdi:delete-outline" class="size-4" />
-											删除({selectedPaths.size})
-										</Button>
-									{:else}
-										<Button variant="ghost" size="sm" onclick={() => { selectMode = true; selectedPaths = new Set(); }}>
-											<Icon icon="mdi:select" class="size-4" />
-											选择
-										</Button>
-									{/if}
-								<Button variant="ghost" size="sm" onclick={() => { myImagesLoaded = false; loadMyImages(); }} disabled={myImagesLoading}>
-									<Icon icon="mdi:refresh" class="size-4" />
-								</Button>
-							</div>
-						</div>
+</Dialog.Root>
+
+<Dialog.Root open={animaHelpOpen} onOpenChange={(o) => animaHelpOpen = o}>
+	<Dialog.Content class="max-w-md">
+		<Dialog.Header>
+			<Dialog.Title>ℹ️ 关于 Anima</Dialog.Title>
+			<Dialog.Description class="text-sm leading-relaxed">
+				<div class="space-y-2">
+					<div>最新的动漫文生图模型，推荐使用 <strong>自然语言的英文</strong> 描述画面，模型理解能力极强，非常听话！</div>
+					<div>角色库：<a href="https://www.downloadmost.com/NoobAI-XL/danbooru-character/" target="_blank" rel="noopener noreferrer" class="text-primary underline">Danbooru Characters</a>（与 WAI 共用）</div>
+					<div>画风库：<a href="https://thetacursed.github.io/Anima-Style-Explorer/" target="_blank" rel="noopener noreferrer" class="text-primary underline">Anima Style Explorer</a>（专用）</div>
+				</div>
+			</Dialog.Description>
+		</Dialog.Header>
+	</Dialog.Content>
+</Dialog.Root>
+
 
 						{#if myImagesLoading}
 							<div class="text-xs text-muted-foreground py-8 text-center">加载中...</div>
