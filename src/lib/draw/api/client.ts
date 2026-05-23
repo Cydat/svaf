@@ -234,12 +234,19 @@ export async function createWalletOrder(payUrl: string, points: number) {
 	});
 }
 
+async function fetchPublic<T>(path: string): Promise<T> {
+	const baseUrl = get(drawEnv.baseUrl);
+	const resp = await fetch(`${baseUrl}${path}`);
+	if (!resp.ok) throw new Error(`fetchPublic ${path} failed: ${resp.status}`);
+	return resp.json();
+}
+
 export async function fetchPlans() {
-	return drawRequest<{ items: Array<{ id: string; name: string; url: string; points: number }> }>('/api/wallet/plans');
+	return fetchPublic<{ items: Array<{ id: string; name: string; url: string; points: number }> }>('/api/wallet/plans');
 }
 
 export async function fetchPointsConfig() {
-	return drawRequest<{ text_to_image: number; image_to_image: number; llm_translate: number; signup_bonus: number }>('/api/wallet/points-config');
+	return fetchPublic<{ text_to_image: number; image_to_image: number; llm_translate: number; signup_bonus: number }>('/api/wallet/points-config');
 }
 
 function _appendToken(url: URL): string {
