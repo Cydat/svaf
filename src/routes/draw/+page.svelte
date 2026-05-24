@@ -117,28 +117,31 @@
 	let myImagesLoaded = $state(false);
 	let myQueueItems = $state<Array<{ id: number; status: string; created_at: number; started_at?: number; finished_at?: number; error?: string; position?: number | null }>>([]);
 	let queueErrors = $state<Record<string, string>>({});
+	let dismissedErrors = $state<Set<string>>(new Set());
 
 	$effect(() => {
 		if (typeof localStorage === 'undefined') return;
 		try {
 			const saved = localStorage.getItem('draw-queue-errors');
 			if (saved) queueErrors = JSON.parse(saved);
+			const dismissed = localStorage.getItem('draw-dismissed-errors');
+			if (dismissed) dismissedErrors = new Set(JSON.parse(dismissed));
 		} catch {}
 	});
 
 	function saveQueueErrors() {
 		if (typeof localStorage === 'undefined') return;
 		localStorage.setItem('draw-queue-errors', JSON.stringify(queueErrors));
+		localStorage.setItem('draw-dismissed-errors', JSON.stringify([...dismissedErrors]));
 	}
 
 	function dismissQueueError(id: number) {
 		const key = String(id);
-		if (queueErrors[key]) {
-			const updated = { ...queueErrors };
-			delete updated[key];
-			queueErrors = updated;
-			saveQueueErrors();
-		}
+		dismissedErrors = new Set([...dismissedErrors, key]);
+		const updated = { ...queueErrors };
+		delete updated[key];
+		queueErrors = updated;
+		saveQueueErrors();
 	}
 	let myQueueLoading = $state(false);
 	let prevQueueIds = new Set<number>();
@@ -478,13 +481,11 @@ async function startGeneration(mode = 'wai') {
 						});
 					}
 				}
-				// Persist failed errors, remove resolved ones
+				// Persist failed errors (skip dismissed), remove resolved ones
 				let changed = false;
-				const failedIds = new Set<string>();
 				for (const item of now) {
 					const key = String(item.id);
-					if (item.status === 'failed' && item.error) {
-						failedIds.add(key);
+					if (item.status === 'failed' && item.error && !dismissedErrors.has(key)) {
 						if (!queueErrors[key]) {
 							queueErrors = { ...queueErrors, [key]: item.error };
 							changed = true;
@@ -903,7 +904,7 @@ async function startGeneration(mode = 'wai') {
 							{:else}
 								<div class="text-xs text-muted-foreground py-3 text-center">暂无排队任务</div>
 							{/if}
-							{#each Object.entries(queueErrors) as [id, err]}
+							{#each Object.entries(queueErrors).filter(([id]) => !dismissedErrors.has(id)) as [id, err]}
 								<div class="flex items-start gap-2 text-xs border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-800 rounded-lg px-3 py-2">
 									<Icon icon="mdi:alert-circle" class="size-4 text-red-500 shrink-0 mt-0.5" />
 									<div class="flex-1 min-w-0 leading-tight">
