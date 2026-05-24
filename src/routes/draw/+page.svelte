@@ -922,7 +922,7 @@ async function startGeneration(mode = 'wai') {
 										{:else if item.status === 'cancelled'}
 											<Icon icon="mdi:cancel" class="size-4 text-muted-foreground" /><span class="flex-1">已取消</span>
 										{:else}
-											<Icon icon="mdi:clock-outline" class="size-4 text-muted-foreground" /><span class="flex-1">等待中</span>
+											<Icon icon="mdi:clock-outline" class="size-4 text-muted-foreground" /><span class="flex-1">等待中，前面还有 {item.position != null ? item.position - 1 : 0} 位</span>
 										{/if}
 										</div>
 									{/each}
