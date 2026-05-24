@@ -264,7 +264,7 @@ export interface AdminGcResult {
 
 export interface AdminLlmProfile {
 	name: string;
-	provider: 'local' | 'google' | 'custom';
+	provider: 'google' | 'custom';
 	local_endpoint?: string;
 	google_api_key?: string;
 	google_model?: string;
