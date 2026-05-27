@@ -5,15 +5,24 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import * as Select from '$lib/components/ui/select';
+	import { Slider } from '$lib/components/ui/slider';
 
 	let imageSrc = $state<string | null>(null);
 	let imageLoaded = $state<HTMLImageElement | null>(null);
 	let watermarkText = $state('');
-	let fontSize = $state(48);
-	let opacity = $state(30);
+	let fontSize = $state([48]);
+	let opacity = $state([30]);
 	let position = $state('右下');
 	let mode = $state('single');
 	let processedUrl = $state<string | null>(null);
+
+	function resetDefaults() {
+		watermarkText = '';
+		fontSize = [48];
+		opacity = [30];
+		position = '右下';
+		mode = 'single';
+	}
 
 	function handleFile(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -37,8 +46,10 @@
 		const ctx = canvas.getContext('2d')!;
 		ctx.drawImage(img, 0, 0);
 
-		ctx.font = `bold ${fontSize}px sans-serif`;
-		ctx.fillStyle = `rgba(255,255,255,${opacity / 100})`;
+		const fs = fontSize[0];
+		const op = opacity[0];
+		ctx.font = `bold ${fs}px sans-serif`;
+		ctx.fillStyle = `rgba(255,255,255,${op / 100})`;
 		ctx.textBaseline = 'bottom';
 
 		const textWidth = ctx.measureText(text).width;
@@ -46,7 +57,7 @@
 
 		if (mode === 'tile') {
 			const spacingX = textWidth + 60;
-			const spacingY = fontSize + 60;
+			const spacingY = fs + 60;
 			for (let y = padding; y < canvas.height; y += spacingY) {
 				for (let x = padding; x < canvas.width; x += spacingX) {
 					ctx.globalAlpha = opacity / 100 * 0.5;
@@ -56,8 +67,8 @@
 		} else {
 			let x: number, y: number;
 			switch (position) {
-				case '左上': x = padding; y = fontSize + padding; break;
-				case '右上': x = canvas.width - textWidth - padding; y = fontSize + padding; break;
+				case '左上': x = padding; y = fs + padding; break;
+				case '右上': x = canvas.width - textWidth - padding; y = fs + padding; break;
 				case '左下': x = padding; y = canvas.height - padding; break;
 				default: x = canvas.width - textWidth - padding; y = canvas.height - padding;
 			}
@@ -84,9 +95,14 @@
 
 	<Card>
 		<CardContent class="space-y-4 pt-6">
-			<div class="space-y-1.5">
-				<Label class="text-xs">选择图片</Label>
-				<Input type="file" accept="image/png,image/jpeg,image/webp" onchange={handleFile} />
+			<div class="flex items-end gap-2">
+				<div class="flex-1 space-y-1.5">
+					<Label class="text-xs">选择图片</Label>
+					<Input type="file" accept="image/png,image/jpeg,image/webp" onchange={handleFile} />
+				</div>
+				<Button variant="outline" size="sm" onclick={resetDefaults}>
+					<Icon icon="mdi:restore" class="size-4" />
+				</Button>
 			</div>
 
 			<div class="space-y-1.5">
@@ -107,14 +123,10 @@
 				</Select.Root>
 			</div>
 
-			<div class="grid grid-cols-3 gap-3">
+			<div class="grid grid-cols-2 gap-3">
 				<div class="space-y-1.5">
-					<Label class="text-xs">字体大小</Label>
-					<Input type="number" bind:value={fontSize} min="12" max="200" />
-				</div>
-				<div class="space-y-1.5">
-					<Label class="text-xs">透明度 (%)</Label>
-					<Input type="number" bind:value={opacity} min="5" max="100" />
+					<Label class="text-xs">字体大小 ({fontSize[0]})</Label>
+					<Slider bind:value={fontSize} min={12} max={200} step={1} />
 				</div>
 				{#if mode === 'single'}
 					<div class="space-y-1.5">
@@ -132,6 +144,10 @@
 						</Select.Root>
 					</div>
 				{/if}
+			</div>
+			<div class="space-y-1.5">
+				<Label class="text-xs">透明度 ({opacity[0]}%)</Label>
+				<Slider bind:value={opacity} min={5} max={100} step={1} />
 			</div>
 		</CardContent>
 	</Card>
