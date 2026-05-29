@@ -14,6 +14,7 @@ let {
 	height = 0,
 	turnstileToken = '',
 	pointsCostSubmit = 0,
+	mode = 'wai',
 }: {
 	workflowPath?: string;
 	styleTags?: string;
@@ -22,6 +23,7 @@ let {
 	height?: number;
 	turnstileToken?: string;
 	pointsCostSubmit?: number;
+	mode?: string;
 } = $props();
 
 interface ChatPreset { id: string; name: string; systemPrompt: string; }
@@ -150,7 +152,7 @@ async function sendMessage() {
 		const response = await chatRequest({
 			message: msg, workflow_path: workflowPath || undefined, style_tags: styleTags || undefined,
 			system_prompt: systemPrompt, negative_prompt: negativePrompt || 'worst quality, low quality, blurry',
-			history: chatHistory, gen_enabled: genEnabled,
+			history: chatHistory, gen_enabled: genEnabled, mode,
 		});
 
 		const reader = response.body?.getReader();
