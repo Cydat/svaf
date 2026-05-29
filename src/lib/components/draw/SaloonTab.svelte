@@ -120,9 +120,11 @@ function clearChat() {
 async function submitGenJob(tags: string, msgIdx: number) {
 	let finalWfPath = workflowPath;
 	if (finalWfPath.endsWith('.txt')) finalWfPath = 'WAI/通用/无Lora.json';
+	// 工作流自带的角色 prompt 拼到 tags 前面，保证始终出同一个角色
+	const finalPrompt = directPrompt?.trim() ? `${directPrompt.trim()}, ${tags}` : tags;
 	try {
 		const res = await addToQueue({
-			direct_prompt: tags, width: width || undefined, height: height || undefined,
+			direct_prompt: finalPrompt, width: width || undefined, height: height || undefined,
 			style_tags: styleTags || undefined, negative_prompt: negativePrompt || undefined,
 			workflow_path: finalWfPath, turnstile_token: turnstileToken || undefined,
 		});
