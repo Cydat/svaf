@@ -1802,7 +1802,7 @@ function formatTime(ts: number) {
                     <div class="font-medium text-sm">{period === 'today' ? '今日' : period === '7d' ? '近7天' : '近1个月'}</div>
                     <div class="text-muted-foreground">调用: {data.calls} | 消耗: ⚡{data.cost}</div>
                     <div class="text-muted-foreground">失败: {data.failed}</div>
-                    <div class="text-muted-foreground">收入: ¥{statsData.income[period] or 0}</div>
+                    <div class="text-muted-foreground">收入: ¥{statsData.income[period] || 0}</div>
                     <div class="flex flex-wrap gap-1 pt-1">
                       {#each Object.entries(data.byModel) as [model, count]}
                         <span class="px-1.5 py-0.5 rounded bg-muted">{model}: {count}</span>
