@@ -73,6 +73,10 @@ function handleFileSelect(e: Event) {
 
 async function handleSubmit() {
   if (submitting || !targetText) return;
+  if (targetText.length > 100) {
+    error = '文字不能超过 100 字（当前 ' + targetText.length + ' 字）';
+    return;
+  }
   error = '';
   submitting = true;
   try {
