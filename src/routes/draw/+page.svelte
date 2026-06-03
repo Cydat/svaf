@@ -7,7 +7,7 @@
   import { Button } from '$lib/components/ui/button';
   import * as Dialog from '$lib/components/ui/dialog';
   import { forumAuth } from '$lib/forum/stores/auth';
-  import { drawEnv, apiError, apiStatus, resolveApiRedirect } from '$lib/draw/stores/env';
+  import { drawEnv, apiError, apiStatus, resolveApiRedirect, redirectLogs } from '$lib/draw/stores/env';
   import { connectStatusWs } from '$lib/draw/api/ws';
   import { fetchMyImages, getImageUrl, getImageProxyUrl, forkOutputImage, recommendImage, deleteMyImage, fetchMyRecommendations, addToQueue, fetchMyQueue, fetchWalletBalance, createWalletOrder, fetchPlans, fetchPointsConfig, fetchWorkflowDetail, fetchAnnouncement, fetchStyles, fetchTtsMyRecords, getTtsRecordDownloadUrl, deleteTtsMyRecord } from '$lib/draw/api/client';
 import { clearMyImages } from '$lib/draw/api/client';
@@ -57,6 +57,7 @@ import { clearMyImages } from '$lib/draw/api/client';
   let queueError = $state("");
   let queueTimer: ReturnType<typeof setInterval> | null = null;
   let globalBusy = $state(false);
+  let settingsOpen = $state(false);
   
   let authToken = $state<string | null>(null);
   let isLoggedIn = $derived(!!authToken);
@@ -779,7 +780,7 @@ async function startGeneration(mode = 'wai') {
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
     <div class="flex items-center gap-x-2 gap-y-1 flex-wrap">
       <Icon icon="mdi:palette" class="size-6 text-primary" />
-      <h1 class="text-xl font-bold">AI 生图</h1>
+      <button class="text-xl font-bold hover:text-primary transition-colors" onclick={() => settingsOpen = true}>AI 生图</button>
       <a href="https://2x.nz/q" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 h-7 rounded-4xl text-xs font-bold no-underline shrink-0 text-white" style="background: linear-gradient(135deg, #ff0000, #ff7700, #ffff00, #00ff00, #0077ff, #8800ff, #ff00ff); background-size: 400% 400%; animation: rainbow 3s ease infinite;">
         加群
       </a>
@@ -811,7 +812,24 @@ async function startGeneration(mode = 'wai') {
   </div>
 
   <!-- Environment Switcher -->
-  <EnvironmentSwitcher />
+  <!-- 设置弹窗 -->
+  <Dialog.Root open={settingsOpen} onOpenChange={(o) => settingsOpen = o}>
+    <Dialog.Content class="max-w-sm">
+      <Dialog.Header>
+        <Dialog.Title class="text-base">设置</Dialog.Title>
+      </Dialog.Header>
+      <EnvironmentSwitcher />
+    </Dialog.Content>
+  </Dialog.Root>
+
+  <!-- API 离线日志 -->
+  {#if $redirectLogs.length > 0 && apiStatusValue === 'offline'}
+    <div class="rounded-lg border border-red-800 bg-red-950/30 p-3 space-y-0.5 text-[11px] font-mono text-red-400 max-h-32 overflow-y-auto">
+      {#each $redirectLogs as log}
+        <div>{log}</div>
+      {/each}
+    </div>
+  {/if}
 
 
   <!-- Auth warning -->
