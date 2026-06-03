@@ -826,7 +826,7 @@ async function startGeneration(mode = 'wai') {
   {#if apiStatusValue !== 'online'}
     <div class="py-8 space-y-4">
       <div class="text-center text-sm text-muted-foreground">
-        {apiStatusValue === 'checking' ? '正在检测 API 状态...' : 'API 离线，请检查网络或联系管理员'}
+        {apiStatusValue === 'checking' ? '正在检测 API 状态...' : '后端不可用，二叉树树目前可能需要使用电脑，未启用生图功能。您可以尝试<a href="https://2x.nz/q" target="_blank" rel="noopener noreferrer" class="underline font-medium">加入官方群聊</a>，群内Bot会在生图上线/下线实时提醒。感谢您的支持！'}
       </div>
       {#if $redirectLogs.length > 0}
         <div class="rounded-lg border border-red-800 bg-red-950/30 p-4 space-y-1 text-xs font-mono text-red-400 max-h-60 overflow-y-auto">
