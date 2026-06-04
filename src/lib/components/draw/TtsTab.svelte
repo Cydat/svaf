@@ -24,6 +24,7 @@ let selectedSpeaker = $state('Vivian');
 
 // Clone & Custom mode
 let instruct = $state('');
+let refText = $state('');
 
 // Audio upload (clone only)
 let audioFile = $state<File | null>(null);
