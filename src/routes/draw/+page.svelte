@@ -845,7 +845,7 @@ async function startGeneration(mode = 'wai') {
       {#if apiStatusValue === "checking"}
         <Badge variant="outline" class="text-xs text-muted-foreground">API 检测中</Badge>
       {:else if apiStatusValue === "offline"}
-        <Badge variant="destructive" class="text-xs">API 离线</Badge>
+        <a href="https://2x.nz/q" target="_blank" rel="noopener noreferrer"><Badge variant="destructive" class="text-xs">API离线 - 加群反馈</Badge></a>
       {:else if apiStatusValue === "online"}
         <Badge variant="outline" class="text-xs text-green-500 border-green-500">API 在线</Badge>
       {/if}
