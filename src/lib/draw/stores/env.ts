@@ -24,12 +24,6 @@ export function addRedirectLog(msg: string) {
 export type ApiStatus = 'checking' | 'online' | 'offline';
 export const apiStatus = writable<ApiStatus>('checking');
 
-// apiError 和 apiStatus 同步：错误时离线
-apiError.subscribe(v => {
-  if (v) {
-    apiStatus.set('offline');
-  }
-});
 
 export const DRAW_API_BASE_URLS: Record<DrawApiEnv, string> = {
   prod: 'https://api-ai.2x.nz',
