@@ -225,9 +225,8 @@ let loadingMore = $state(false);
   // Lora approval
   let loraPending = $state<import('$lib/draw/types').LoraApplication[]>([]);
   let loraLoading = $state(false);
-  let loraRejectId = $state<string | null>(null);
-  let loraRejectReason = $state('');
   let loraApprovingId = $state<string | null>(null);
+  let loraRejectingId = $state<string | null>(null);
 
   async function loadLoraPending() {
     loraLoading = true;
@@ -254,24 +253,17 @@ let loadingMore = $state(false);
     }
   }
 
-  function startRejectLora(id: string) {
-    loraRejectId = id;
-    loraRejectReason = '';
-  }
-
-  async function handleRejectLora() {
-    if (!loraRejectId) return;
-    loading = true;
+  async function handleRejectLora(id: string) {
+    if (!confirm('确定拒绝该 Lora 申请？')) return;
+    loraRejectingId = id;
     try {
-      await loraApi.rejectLora(loraRejectId, loraRejectReason);
+      await loraApi.rejectLora(id);
       showMsg('success', '已拒绝');
-      loraRejectId = null;
-      loraRejectReason = '';
       loadLoraPending();
     } catch (e) {
       showMsg('error', e instanceof Error ? e.message : '操作失败');
     } finally {
-      loading = false;
+      loraRejectingId = null;
     }
   }
 
@@ -2091,25 +2083,15 @@ function formatTime(ts: number) {
                           通过
                         {/if}
                       </Button>
-                      {#if loraRejectId === item.id}
-                        <div class="flex items-center gap-2 flex-1">
-                          <Input
-                            bind:value={loraRejectReason}
-                            placeholder="拒绝原因（选填）"
-                            class="h-7 text-xs flex-1"
-                            onkeydown={(e) => e.key === 'Enter' && handleRejectLora()}
-                          />
-                          <Button size="sm" variant="destructive" class="text-xs h-7" onclick={handleRejectLora} disabled={loraApprovingId !== null}>
-                            确认拒绝
-                          </Button>
-                          <Button size="sm" variant="ghost" class="text-xs h-7" onclick={() => (loraRejectId = null)}>取消</Button>
-                        </div>
-                      {:else}
-                        <Button size="sm" variant="destructive" class="text-xs h-7" onclick={() => startRejectLora(item.id)}>
+                      <Button size="sm" variant="destructive" class="text-xs h-7" onclick={() => handleRejectLora(item.id)} disabled={loraRejectingId === item.id || loraApprovingId !== null}>
+                        {#if loraRejectingId === item.id}
+                          <Icon icon="mdi:loading" class="size-3.5 mr-1 animate-spin" />
+                          拒绝中...
+                        {:else}
                           <Icon icon="mdi:close" class="size-3.5 mr-1" />
                           拒绝
-                        </Button>
-                      {/if}
+                        {/if}
+                      </Button>
                     </div>
                   </div>
                 {/each}

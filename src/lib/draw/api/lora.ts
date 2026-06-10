@@ -37,10 +37,10 @@ export async function approveLora(id: string) {
   });
 }
 
-export async function rejectLora(id: string, reason: string) {
+export async function rejectLora(id: string) {
   return drawRequest<{ ok: boolean }>('/api/lora/admin/reject', {
     method: 'POST',
-    json: { id, reason },
+    json: { id },
     requiresAuth: true,
   });
 }
