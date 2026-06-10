@@ -30,15 +30,17 @@
 
 ## 项目结构
 - **前端**：Svelte 5 + SvelteKit + adapter-static，位于 `C:\Users\acofo\Documents\GitHub\svaf`
-- **后端**：Node.js/Express + TypeScript (tsx)，位于 SSH `192.168.124.19:/root/nDI/node-server/`
-- **数据存储**：后端用 JSON 文件存于 `/root/nDI/web/`
+- **生图后端**：Node.js/Express + TypeScript (tsx)，位于 SSH `192.168.124.19:/root/nDI/node-server/`
+- **论坛后端**：Cloudflare Worker，源码位于 `C:\Users\acofo\Documents\GitHub\acofork_forum_backend`
+- **数据存储**：生图后端用 JSON 文件存于 `/root/nDI/web/`
 - **ComfyUI**：工作流 `/root/comfy/ComfyUI/user/default/workflows/`，模型 `/root/comfy/ComfyUI/models/`
 
 ## 后端访问
-- SSH: `192.168.124.19` (root)
+- 生图后端 SSH: `192.168.124.19` (root)
 - X 盘映射: `X:\root\nDI`
-- 后台文件可直接通过 X 盘读写，但重启服务需 SSH
-- 后端支持热重载（`hot()` 函数动态 import），改文件后无需重启
+- 生图后台文件可直接通过 X 盘读写，但重启服务需 SSH
+- 生图后端支持热重载（`hot()` 函数动态 import），改文件后无需重启
+- 论坛后端是 Cloudflare Worker，通过 wrangler 部署
 
 ## ByoLora 系统
 - 用户通过 `LoraApplyDialog.svelte` 提交 Lora 申请
